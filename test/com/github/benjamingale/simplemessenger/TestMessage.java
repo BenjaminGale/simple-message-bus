@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package gale.benjamin.messenger;
+package com.github.benjamingale.simplemessenger;
 
 /**
  * Sample message class to be utilized by unit tests.

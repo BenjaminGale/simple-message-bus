@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package gale.benjamin.messenger;
+package com.github.benjamingale.simplemessenger;
 
 /**
  * Provides services for a message. A {@code MessageService<T>} object provides

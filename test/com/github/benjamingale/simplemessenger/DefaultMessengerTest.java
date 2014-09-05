@@ -13,8 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package gale.benjamin.messenger;
+package com.github.benjamingale.simplemessenger;
 
+import com.github.benjamingale.simplemessenger.MessageService;
+import com.github.benjamingale.simplemessenger.DefaultMessenger;
+import com.github.benjamingale.simplemessenger.DefaultMessageListenerStore;
+import com.github.benjamingale.simplemessenger.Messenger;
 import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
