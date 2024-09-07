@@ -15,14 +15,12 @@
  */
 package com.github.benjamingale.simplemessenger;
 
-import com.github.benjamingale.simplemessenger.MessageService;
-import com.github.benjamingale.simplemessenger.DefaultMessenger;
-import com.github.benjamingale.simplemessenger.DefaultMessageListenerStore;
-import com.github.benjamingale.simplemessenger.Messenger;
-import junit.framework.Assert;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Tests for the DefaultMessenger class.
@@ -32,12 +30,12 @@ public class DefaultMessengerTest {
     
     private Messenger messenger;
     
-    @Before
+    @BeforeEach
     public void setUp() {
         this.messenger = new DefaultMessenger(new DefaultMessageListenerStore());
     }
     
-    @After
+    @AfterEach
     public void tearDown() {
         this.messenger = null;
     }
@@ -48,13 +46,16 @@ public class DefaultMessengerTest {
         MessageService<String> stringMsg = this.messenger.getMessage(String.class);
         MessageService<TestMessage> testMsg = this.messenger.getMessage(TestMessage.class);
         
-        Assert.assertNotNull(objMsg);
-        Assert.assertNotNull(stringMsg);
-        Assert.assertNotNull(testMsg);
+        assertNotNull(objMsg);
+        assertNotNull(stringMsg);
+        assertNotNull(testMsg);
      }
     
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testGetMessageDoesNotAcceptNull() {
-        this.messenger.getMessage(null);
+        assertThrows(
+            NullPointerException.class,
+            () -> this.messenger.getMessage(null)
+        );
     }
 }

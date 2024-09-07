@@ -15,14 +15,14 @@
  */
 package com.github.benjamingale.simplemessenger;
 
-import com.github.benjamingale.simplemessenger.MessageListener;
-import com.github.benjamingale.simplemessenger.MessageListenerStore;
-import com.github.benjamingale.simplemessenger.DefaultMessageListenerStore;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import java.util.Collection;
-import junit.framework.Assert;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Tests for DefaultMessageListenerStore class.
@@ -33,24 +33,30 @@ public class DefaultMessageListenerStoreTest {
     
     private MessageListenerStore store;
     
-    @Before
+    @BeforeEach
     public void setUp() {
         this.store = new DefaultMessageListenerStore();
     }
     
-    @After
+    @AfterEach
     public void tearDown() {
         this.store = null;
     }
     
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testAddListenerDoesNotAcceptNullMessageClass() {
-        this.store.addListener(null, null);
+        assertThrows(
+            NullPointerException.class,
+            () -> this.store.addListener(null, null)
+        );
     }
     
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testAddListenerDoesNotAcceptNullListener() {
-        this.store.addListener(TestMessage.class, null);
+        assertThrows(
+            NullPointerException.class,
+            () -> this.store.addListener(TestMessage.class, null)
+        );
     }
     
     @Test
@@ -63,11 +69,11 @@ public class DefaultMessageListenerStoreTest {
         
         int count = 0;
         
-        for (MessageListener<Object> listener : listeners) {
+        for (MessageListener<Object> _ : listeners) {
             count = count + 1;
         }
         
-        Assert.assertEquals(2, count);
+        assertEquals(2, count);
     }
     
     @Test
@@ -85,11 +91,11 @@ public class DefaultMessageListenerStoreTest {
         
         int count = 0;
         
-        for (MessageListener<Object> alistener : listeners) {
+        for (MessageListener<Object> _ : listeners) {
             count = count + 1;
         }
         
-        Assert.assertEquals(2, count);
+        assertEquals(2, count);
     }
     
     @Test
@@ -109,28 +115,32 @@ public class DefaultMessageListenerStoreTest {
         Iterable<MessageListener<Object>> objectMessageListeners;
         objectMessageListeners = this.store.getListeners(Object.class);
         
-        for (MessageListener<TestMessage> listener : testMessageListeners) {
+        for (MessageListener<TestMessage> _ : testMessageListeners) {
             testMessageCount = testMessageCount + 1;
         }
         
-        for (MessageListener<Object> listener : objectMessageListeners) {
+        for (MessageListener<Object> _ : objectMessageListeners) {
             objectMessageCount = objectMessageCount + 1;
         }
         
-        Assert.assertEquals(1, objectMessageCount);
-        Assert.assertEquals(1, testMessageCount);
+        assertEquals(1, objectMessageCount);
+        assertEquals(1, testMessageCount);
     }
     
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testListenersCantBeModifiedIfCastToCollection() {
-        Iterable<MessageListener<Object>> listeners;
-        listeners = this.store.getListeners(Object.class);
-        
-        Collection<MessageListener<Object>> col;
-        col = (Collection<MessageListener<Object>>)listeners;
-        
-        if (col != null) {
-            col.add(o -> {});
-        }
+        assertThrows(
+            UnsupportedOperationException.class,
+            () -> {
+                Iterable<MessageListener<Object>> listeners;
+                listeners = this.store.getListeners(Object.class);
+
+                Collection<MessageListener<Object>> col;
+                col = (Collection<MessageListener<Object>>)listeners;
+
+                if (col != null) {
+                    col.add(_ -> {});
+                }
+            });
     }
 }

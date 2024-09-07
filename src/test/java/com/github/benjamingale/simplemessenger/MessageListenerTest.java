@@ -15,15 +15,13 @@
  */
 package com.github.benjamingale.simplemessenger;
 
-import com.github.benjamingale.simplemessenger.MessageListener;
-import com.github.benjamingale.simplemessenger.DefaultMessenger;
-import com.github.benjamingale.simplemessenger.DefaultMessageListenerStore;
-import com.github.benjamingale.simplemessenger.Messenger;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import java.util.function.Predicate;
-import junit.framework.Assert;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Tests the default method of the MessageListener interface.
@@ -34,12 +32,12 @@ public class MessageListenerTest {
     
     private Messenger messenger;
     
-    @Before
+    @BeforeEach
     public void setUp() {
         this.messenger = new DefaultMessenger(new DefaultMessageListenerStore());
     }
     
-    @After
+    @AfterEach
     public void tearDown() {
         this.messenger = null;
     }
@@ -47,9 +45,9 @@ public class MessageListenerTest {
     @Test
     public void testApplyCondition() {
         MessageListener<TestMessage> listener;
-        listener = m -> { Assert.fail(); };
-        
-        listener = listener.applyCondition(p -> p.isCondition() == false);
+        listener = _ -> fail();
+
+        listener = listener.applyCondition(p -> !p.isCondition());
         
         this.messenger.getMessage(TestMessage.class).subscribe(listener);
         this.messenger.getMessage(TestMessage.class).publish(new TestMessage());
@@ -58,7 +56,7 @@ public class MessageListenerTest {
     @Test
     public void testApplyConditionComposesCorrectly() {
         MessageListener<TestMessage> listener;
-        listener = m -> { Assert.fail(); };
+        listener = _ -> fail();
         
         listener = listener.applyCondition(p -> !p.isCondition());
         listener = listener.applyCondition(p -> p.getText().equals("XYZ"));
@@ -70,10 +68,10 @@ public class MessageListenerTest {
     @Test
     public void testApplyConditionWorksWithComposedPredicate() {
         MessageListener<TestMessage> listener;
-        listener = m -> { Assert.fail(); };
+        listener = _ -> fail();
         
         Predicate<TestMessage> predicate;
-        predicate = p -> p.isCondition();
+        predicate = TestMessage::isCondition;
         predicate = predicate.and(p -> p.getText().equals("ABC"));
         
         listener = listener.applyCondition(predicate);
